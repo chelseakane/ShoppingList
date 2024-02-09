@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ShoppingList</string>
+    <string name="edit_title_description">Edit title of the list</string>
+    <string name="edit_title_confirm_description">Confirm new title</string>
+    <string name="empty_list_title">Your shopping list is empty</string>
+    <string name="empty_list_subtitle">Add an item by clicking the button below</string>
+    <string name="add_item">Add item</string>
+    <string name="edit_item">Edit item</string>
+    <string name="delete_item">Delete item</string>
+    <string name="default_list_title">Shopping List</string>
+</resources>
