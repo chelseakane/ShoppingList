@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui.common
+package com.example.shoppinglist.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -40,7 +40,19 @@ fun SmallTopAppBar(
     Scaffold(
         topBar = {
             var isEditMode by remember { mutableStateOf(false) }
+            var currentTitle by remember { mutableStateOf(title) }
             val focusRequester = remember { FocusRequester() }
+            // Show the cursor at the end of the text field initially AND allow the user to move it
+            var textFieldValueState by remember {
+                mutableStateOf(
+                    TextFieldValue(
+                        text = currentTitle,
+                        selection = TextRange(
+                            index = currentTitle.length
+                        )
+                    )
+                )
+            }
 
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -50,8 +62,11 @@ fun SmallTopAppBar(
                 title = {
                     if (isEditMode) {
                         TextField(
-                            value = TextFieldValue(text = title, selection = TextRange(title.length)),
-                            onValueChange = { updateTitle(it.text) },
+                            value = textFieldValueState,
+                            onValueChange = {
+                                currentTitle = it.text
+                                textFieldValueState = it
+                            },
                             singleLine = true,
                             maxLines = 1,
                             modifier = Modifier.focusRequester(focusRequester = focusRequester),
@@ -68,17 +83,24 @@ fun SmallTopAppBar(
                             focusRequester.requestFocus()
                         }
                     } else {
-                        Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(currentTitle, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 },
                 actions = {
-                    IconButton(onClick = { isEditMode = !isEditMode }) {
-                        if (isEditMode) {
+                    if (isEditMode) {
+                        IconButton(
+                            onClick = {
+                                isEditMode = !isEditMode
+                                updateTitle(currentTitle)
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = stringResource(R.string.edit_title_confirm_description)
                             )
-                        } else {
+                        }
+                    } else {
+                        IconButton(onClick = { isEditMode = !isEditMode }) {
                             Icon(
                                 imageVector = Icons.Default.Edit,
                                 contentDescription = stringResource(R.string.edit_title_description)
@@ -88,7 +110,7 @@ fun SmallTopAppBar(
                 },
                 // TODO: Add navigation icon once there's content to navigate back to
 //                navigationIcon = {
-//                    IconButton(onClick = { /*TODO*/ }) {
+//                    IconButton(onClick = { }) {
 //                        Icon(
 //                            imageVector = Icons.Default.ArrowBack,
 //                            contentDescription = "Back"

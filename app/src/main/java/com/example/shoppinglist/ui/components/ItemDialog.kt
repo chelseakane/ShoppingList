@@ -1,4 +1,4 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,12 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
-import com.example.shoppinglist.models.ListItem
+import com.example.shoppinglist.models.ListItemEntity
 
 @Composable
 fun ItemDialog(
-    item: ListItem? = null,
-    onUpdate: (String, Int?) -> Unit,
+    item: ListItemEntity? = null,
+    onUpdate: (Int, String, Int?) -> Unit,
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = { onDismiss() }) {
@@ -41,6 +42,8 @@ fun ItemDialog(
             elevation = CardDefaults.cardElevation(4.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
+            // an id of 0 will be ignored by Room and replaced with a unique id
+            val itemId: Int by remember { mutableIntStateOf(item?.id ?: 0) }
             var itemName by remember { mutableStateOf(item?.name ?: "") }
             var itemQuantity: Int? by remember { mutableStateOf(item?.quantity)}
             var showError: Boolean by remember { mutableStateOf(false) }
@@ -109,7 +112,7 @@ fun ItemDialog(
                     Button(
                         onClick = {
                             if (itemName.isNotEmpty()) {
-                                onUpdate(itemName, itemQuantity)
+                                onUpdate(itemId, itemName, itemQuantity)
                                 onDismiss()
                             } else {
                                 showError = true
@@ -131,5 +134,5 @@ fun ItemDialog(
 @Preview(showBackground = true)
 @Composable
 fun AddItemDialogPreview() {
-    ItemDialog(onUpdate = { _, _ ->}, onDismiss =  {})
+    ItemDialog(onUpdate = { _, _, _ ->}, onDismiss =  {})
 }
