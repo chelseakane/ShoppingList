@@ -1,14 +1,15 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui.screens.list
 
 import android.content.res.Resources
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shoppinglist.R
 import com.example.shoppinglist.data.ShoppingListRepository
 import com.example.shoppinglist.di.ShoppingListApplication
 import com.example.shoppinglist.models.ListItem
 import com.example.shoppinglist.models.ListItemEntity
 import com.example.shoppinglist.models.ListState
-import com.example.shoppinglist.models.ShoppingListEntity
+import com.example.shoppinglist.models.ShoppingListData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -23,33 +24,28 @@ class ShoppingListViewModel @Inject constructor(
     private val listsRepository: ShoppingListRepository,
     private val resources: Resources
 ) : AndroidViewModel(application = ShoppingListApplication()) {
-    val lists: StateFlow<ListState<ShoppingListEntity>> by lazy { _lists }
-    private val _lists = MutableStateFlow<ListState<ShoppingListEntity>>(ListState.Loading)
+    val list: StateFlow<ListState<ShoppingListData>> by lazy { _list }
+    private val _list = MutableStateFlow<ListState<ShoppingListData>>(ListState.Loading)
 
-    val items: StateFlow<ListState<ListItemEntity>> by lazy { _items }
-    private val _items = MutableStateFlow<ListState<ListItemEntity>>(ListState.Loading)
+    var id: Int
+        get() = _id
+        set(value) {
+            _id = value
+            getListById(value)
+        }
+    private var _id: Int = 0
 
-    init {
-        getLists()
-    }
-
-    private fun getLists() {
+    fun getListById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _lists.value = ListState.Loaded(listsRepository.getAllLists().first())
+            val list = listsRepository.getListById(id).first()
+            val items = listsRepository.getItems(id).first()
+            _list.value = ListState.Loaded(ShoppingListData(list?.id ?: 0, list?.name, items))
         }
     }
 
     fun updateList(id: Int, name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             async { listsRepository.updateList(id, name) }.await()
-            getLists()
-        }
-    }
-
-    fun deleteList(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            async { listsRepository.deleteList(id) }.await()
-            getLists()
         }
     }
 
@@ -58,26 +54,21 @@ class ShoppingListViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             listsRepository.addItem(item, listId, defaultTitle)
-            getItems(listId)
-            getLists()
+            getListById(listId)
         }
-    }
-
-    suspend fun getItems(listId: Int) {
-        _items.value = ListState.Loaded(listsRepository.getItems(listId).first())
     }
 
     fun updateItem(item: ListItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             listsRepository.updateItem(item)
-            getItems(item.listId)
+            getListById(item.listId)
         }
     }
 
     fun deleteItem(item: ListItemEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             listsRepository.delete(item)
-            getItems(item.listId)
+            getListById(item.listId)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.shoppinglist.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,12 +30,14 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.shoppinglist.R
+import com.example.shoppinglist.models.Destination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallTopAppBar(
     title: String,
     updateTitle: (String) -> Unit,
+    onNavigate: (Destination) -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -109,14 +112,16 @@ fun SmallTopAppBar(
                     }
                 },
                 // TODO: Add navigation icon once there's content to navigate back to
-//                navigationIcon = {
-//                    IconButton(onClick = { }) {
-//                        Icon(
-//                            imageVector = Icons.Default.ArrowBack,
-//                            contentDescription = "Back"
-//                        )
-//                    }
-//                }
+                navigationIcon = {
+                    IconButton(onClick = {
+                        onNavigate(Destination.MultiListScreen)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
             )
         }
     ) { innerPadding ->

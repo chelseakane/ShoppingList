@@ -8,4 +8,5 @@
     <string name="edit_item">Edit item</string>
     <string name="delete_item">Delete item</string>
     <string name="default_list_title">Shopping List</string>
+    <string name="add_list">Create new list</string>
 </resources>

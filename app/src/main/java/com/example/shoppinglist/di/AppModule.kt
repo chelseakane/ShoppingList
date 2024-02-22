@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.room.Room
 import com.example.shoppinglist.data.storage.AppDatabase
+import com.example.shoppinglist.network.MealsAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,6 @@ class AppModule {
     @Provides
     fun provideResources(@ApplicationContext context: Context): Resources = context.resources
 
-    companion object {
-        fun createResources(context: Context): Resources = context.resources
-    }
+    @Provides
+    fun provideApiInterface() = MealsAPI.mealsApiInterface
 }

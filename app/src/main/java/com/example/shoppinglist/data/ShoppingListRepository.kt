@@ -18,6 +18,17 @@ class ShoppingListRepository @Inject constructor(
         return db.shoppingListDao().getAll()
     }
 
+    fun getListById(id: Int): Flow<ShoppingListEntity?> {
+        return db.shoppingListDao().getById(id)
+    }
+
+    /**
+     * Adds a new list to the database
+     */
+    fun addList(title: String) {
+        db.shoppingListDao().insert(ShoppingListEntity(0, title))
+    }
+
     /**
      * Updates the given list with a new name
      */

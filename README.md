@@ -8,8 +8,8 @@ It's still under construction, but you can check it out.
 
 - [x] Adding a database to store the items long-term
 
-- [ ] Adding a home page where you can see multiple lists, instead of just 1
+- [x] Adding a home page where you can see multiple lists, instead of just 1
 
-- [ ] Adding navigation once there are multiple screens
+- [x] Adding navigation once there are multiple screens
 
-- [ ] Adding an api to search for items to add to the list or share lists with others, still deciding
+- [ ] Adding an api to search for items to add to the list ~~or share lists with others, still deciding~~
