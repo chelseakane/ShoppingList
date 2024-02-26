@@ -22,12 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
+import com.example.shoppinglist.R
 import com.example.shoppinglist.models.ListItemEntity
 
 @Composable
@@ -54,13 +56,13 @@ fun ItemDialog(
                 horizontalAlignment = CenterHorizontally
             ) {
                 Text(
-                    text = "Add an item to your list",
+                    text = stringResource(id = R.string.add_item_title),
                     modifier = Modifier.padding(bottom = 4.dp),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "Enter the item(s) and quantity below.",
+                    text = stringResource(id = R.string.add_item_subtitle),
                     modifier = Modifier.padding(bottom = 16.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium
@@ -77,10 +79,19 @@ fun ItemDialog(
                             .padding(end = 8.dp),
                         value = itemName,
                         onValueChange = { itemName = it },
-                        label = { Text("Item Name") },
+                        label = { Text(stringResource(R.string.item_name)) },
                         shape = RoundedCornerShape(8.dp),
                         singleLine = true,
-                        isError = showError && itemName.isEmpty()
+                        isError = showError && itemName.isEmpty(),
+                        supportingText = {
+                            if (showError && itemName.isEmpty()) {
+                                Text(
+                                    text = stringResource(R.string.add_item_error),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        }
                     )
                     OutlinedTextField(
                         modifier = Modifier
@@ -107,7 +118,7 @@ fun ItemDialog(
                     OutlinedButton(
                         onClick = { onDismiss() },
                     ) {
-                        Text("Dismiss")
+                        Text(stringResource(R.string.dismiss))
                     }
                     Button(
                         onClick = {
@@ -120,9 +131,9 @@ fun ItemDialog(
                         },
                     ) {
                         if (item != null) {
-                            Text("Update Item")
+                            Text(stringResource(R.string.update_item))
                         } else {
-                            Text("Add Item")
+                            Text(stringResource(R.string.add_item))
                         }
                     }
                 }

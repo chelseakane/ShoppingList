@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,7 +30,6 @@ import com.example.shoppinglist.R
 import com.example.shoppinglist.models.ListItemEntity
 import com.example.shoppinglist.models.ListState
 import com.example.shoppinglist.models.ListUpdateState
-import com.example.shoppinglist.ui.screens.list.ShoppingListViewModel
 
 @Composable
 fun ListContainer(
@@ -33,22 +37,25 @@ fun ListContainer(
     modifier: Modifier = Modifier,
     onUpdate: (ListUpdateState) -> Unit
 ) {
-    val shoppingListViewModel: ShoppingListViewModel = hiltViewModel()
-    shoppingListViewModel.id = id
-    val list = shoppingListViewModel.list.collectAsState()
+    val multiListViewModel: MultiListViewModel = hiltViewModel()
+    multiListViewModel.getAllListsData()
+    val lists = multiListViewModel.listsWithData.collectAsState()
 
-    when (val state = list.value) {
+    when (val state = lists.value) {
         is ListState.Loading -> {
             // show loading indicator
         }
         is ListState.Loaded -> {
-            ListContainerImpl(
-                id = state.data.id,
-                title = state.data.title ?: stringResource(id = R.string.default_list_title),
-                items = state.data.items,
-                onUpdate = onUpdate,
-                modifier = modifier.padding(8.dp)
-            )
+            val list = state.data.find { it.id == id }
+            list?.let {
+                ListContainerImpl(
+                    id = it.id,
+                    title = it.title ?: stringResource(id = R.string.default_list_title),
+                    items = it.items,
+                    onUpdate = onUpdate,
+                    modifier = modifier.padding(8.dp)
+                )
+            }
         }
     }
 }
@@ -64,11 +71,10 @@ fun ListContainerImpl(
     Box(
         modifier = modifier
             .clickable { onUpdate(ListUpdateState.Details(id)) }
-            .border(width = 1.dp, color = Color.Black, shape = MaterialTheme.shapes.medium)
-            .padding(8.dp),
+            .border(width = 1.dp, color = Color.Black, shape = MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center
     ) {
-        Column {
+        Column(modifier = Modifier.padding(8.dp)) {
             Text(
                 text = title,
                 textAlign = TextAlign.Center,
@@ -81,14 +87,21 @@ fun ListContainerImpl(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Canvas(
                         modifier = Modifier
-                            .padding(start = 8.dp,end = 8.dp)
+                            .padding(start = 8.dp, end = 8.dp)
                             .size(6.dp)
                     ){
                         drawCircle(Color.Black)
                     }
-                    Text(text = item.name)
+                    Text(text = item.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-
+            }
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = { onUpdate(ListUpdateState.Delete(id)) }) {
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = stringResource(id = R.string.delete_list)
+                )
             }
         }
     }

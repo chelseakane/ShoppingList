@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shoppinglist.R
-import com.example.shoppinglist.models.ItemDialogState
+import com.example.shoppinglist.models.DialogState
 import com.example.shoppinglist.models.ListItem
 import com.example.shoppinglist.models.ListItemEntity
 import com.example.shoppinglist.models.ItemUpdateState
@@ -45,18 +45,18 @@ fun ShoppingListImpl(
     modifier: Modifier = Modifier,
     onUpdate: (ItemUpdateState) -> Unit,
 ) {
-    var itemDialogState by remember { mutableStateOf<ItemDialogState>(ItemDialogState.Dismissed) }
+    var itemDialogState by remember { mutableStateOf<DialogState>(DialogState.Dismissed) }
 
     when (val state = itemDialogState) {
-        is ItemDialogState.Add -> {
+        is DialogState.Add -> {
             ItemDialog(
                 onUpdate = { id, name, quantity ->
                     onUpdate(ItemUpdateState.Add(ListItem(id, name, quantity)))
                 },
-                onDismiss = { itemDialogState = ItemDialogState.Dismissed }
+                onDismiss = { itemDialogState = DialogState.Dismissed }
             )
         }
-        is ItemDialogState.Edit -> {
+        is DialogState.Edit -> {
             ItemDialog(
                 item = state.item,
                 onUpdate = { id, name, quantity ->
@@ -64,7 +64,7 @@ fun ShoppingListImpl(
                         ItemUpdateState.Edit(ListItemEntity(id, state.item.listId, name, quantity))
                     )
                 },
-                onDismiss = { itemDialogState = ItemDialogState.Dismissed }
+                onDismiss = { itemDialogState = DialogState.Dismissed }
             )
         }
         else -> { /* No-op */ }
@@ -96,7 +96,7 @@ fun ShoppingListImpl(
                         ShoppingListItem(
                             name = item.name,
                             quantity = item.quantity,
-                            onEdit = { itemDialogState = ItemDialogState.Edit(item) },
+                            onEdit = { itemDialogState = DialogState.Edit(item) },
                             onDelete = { onUpdate(ItemUpdateState.Delete(item)) }
                         )
                     }
@@ -106,7 +106,7 @@ fun ShoppingListImpl(
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd),
-            onClick = { itemDialogState = ItemDialogState.Add },
+            onClick = { itemDialogState = DialogState.Add },
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_item))

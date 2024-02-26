@@ -111,7 +111,6 @@ fun SmallTopAppBar(
                         }
                     }
                 },
-                // TODO: Add navigation icon once there's content to navigate back to
                 navigationIcon = {
                     IconButton(onClick = {
                         onNavigate(Destination.MultiListScreen)

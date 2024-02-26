@@ -92,7 +92,7 @@ fun MainContent(
         color = MaterialTheme.colorScheme.background
     ) {
         val listsViewModel: MultiListViewModel = hiltViewModel()
-        val lists by listsViewModel.lists.collectAsState()
+        val lists by listsViewModel.listsWithData.collectAsState()
         // if the value of lists changes, update the id
         when (val state = lists) {
             is ListState.Loading -> {

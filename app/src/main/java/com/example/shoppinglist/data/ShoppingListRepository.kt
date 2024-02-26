@@ -25,8 +25,15 @@ class ShoppingListRepository @Inject constructor(
     /**
      * Adds a new list to the database
      */
-    fun addList(title: String) {
-        db.shoppingListDao().insert(ShoppingListEntity(0, title))
+    fun addList(title: String): Long {
+        return db.shoppingListDao().insert(ShoppingListEntity(0, title))
+    }
+
+    /**
+     * Fetches a list by its row id after it has been added to the database
+     */
+    fun getListByRowId(rowId: Long): Flow<ShoppingListEntity?> {
+        return db.shoppingListDao().getByIdFromRowId(rowId)
     }
 
     /**

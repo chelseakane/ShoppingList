@@ -5,8 +5,22 @@
     <string name="empty_list_title">Your shopping list is empty</string>
     <string name="empty_list_subtitle">Add an item by clicking the button below</string>
     <string name="add_item">Add item</string>
+    <string name="add_item_error">Please enter an item name.</string>
     <string name="edit_item">Edit item</string>
     <string name="delete_item">Delete item</string>
     <string name="default_list_title">Shopping List</string>
-    <string name="add_list">Create new list</string>
+    <string name="add_list">Create a new list</string>
+    <string name="create_list_title">Enter a name for your new list below.</string>
+    <string name="cancel">Cancel</string>
+    <string name="create_list">Create List</string>
+    <string name="create_list_error">Please enter a name for your list.</string>
+    <string name="add_item_title">Add an item to your list</string>
+    <string name="add_item_subtitle">Enter the item(s) and quantity below.</string>
+    <string name="list_name">List Name</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="update_item">Update Item</string>
+    <string name="item_name">Item Name</string>
+    <string name="delete_list">Delete List</string>
+    <string name="delete_list_title">Delete this list?</string>
+    <string name="delete_list_subtitle">This action cannot be undone.</string>
 </resources>

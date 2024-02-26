@@ -19,7 +19,10 @@ interface ShoppingListDao {
     fun getById(id: Int): Flow<ShoppingListEntity?>
 
     @Insert
-    fun insert(vararg lists: ShoppingListEntity)
+    fun insert(list: ShoppingListEntity): Long
+
+    @Query("SELECT * FROM ShoppingListEntity WHERE rowid = :rowId")
+    fun getByIdFromRowId(rowId: Long): Flow<ShoppingListEntity?>
 
     @Update
     fun update(list: ShoppingListEntity)
